@@ -29,7 +29,14 @@ now = datetime.now().astimezone(eastern)
 current_day = now.date()
 yesterday = current_day - timedelta(days=1)
 
-spark = SparkSession.builder.appName("Daily Call Summary").master("local[*]").getOrCreate()
+spark = SparkSession.builder.appName("Daily Call Summary")\
+.master("local[*]") \
+.config("spark.driver.bindAddress", "127.0.0.1") \
+.config("spark.driver.memory", "5g") \
+.config("spark.executor.memory", "5g") \
+.config("spark.jars.packages", "io.delta:delta-core_2.12-2.2.0.jar") \
+.config("spark.sql.extensions", "io.delta.sql.DeltaSparkSessionExtension")\
+.getOrCreate()
 
 def format_duration(duration):
     delta = relativedelta(seconds=int(duration))
@@ -37,7 +44,7 @@ def format_duration(duration):
 
 duration_udf = F.udf(format_duration, T.StringType())
 
-store_calls = spark.read.json("s3a://pincanna-twilio/events_stream/endpoint=store_call_ended/")
+store_calls = spark.read.json("s3://pincanna-twilio/events_stream/endpoint=store_call_ended/")
 
 # store_calls = store_calls.withColumn("duration", duration_udf(F.col("event.form_data.CallDuration")))
 
