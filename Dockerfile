@@ -29,7 +29,7 @@ RUN yum update -y && \
 
 
 # Set environment variables for PySpark
-ENV SPARK_HOME="/var/lang/lib/python3.8/site-packages/pyspark"
+ENV SPARK_HOME="/var/lang/lib/python3.9/site-packages/pyspark"
 ENV PATH=$PATH:$SPARK_HOME/bin
 ENV PATH=$PATH:$SPARK_HOME/sbin
 ENV PYTHONPATH=$SPARK_HOME/python:$SPARK_HOME/python/lib/py4j-0.10.9-src.zip:$PYTHONPATH
