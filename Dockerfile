@@ -58,7 +58,7 @@ RUN chmod -R 755 $SPARK_HOME
 
 # Copy the Pyspark script to container
 COPY sparkLambdaHandler.py ${LAMBDA_TASK_ROOT}
-MKDIR ${LAMBDA_TASK_ROOT}/templates
+RUN mkdir ${LAMBDA_TASK_ROOT}/templates
 COPY templates/* ${LAMBDA_TASK_ROOT}/templates/
 
 # calling the Lambda handler
