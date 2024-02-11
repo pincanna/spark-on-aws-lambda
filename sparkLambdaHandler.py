@@ -21,7 +21,7 @@ def s3_script_download(s3_bucket_script: str,input_script: str)-> None:
     try:
         logger.info(f'Now downloading script {input_script} in {s3_bucket_script} to /tmp')
         s3_client.Bucket(s3_bucket_script).download_file(input_script, "/tmp/spark_script.py")
-      
+
     except Exception as e :
         logger.error(f'Error downloading the script {input_script} in {s3_bucket_script}: {e}')
     else:
@@ -55,19 +55,18 @@ def lambda_handler(event, context):
 
     """
     Lambda_handler is called when the AWS Lambda
-    is triggered. The function is downloading file 
-    from Amazon S3 location and spark submitting 
+    is triggered. The function is downloading file
+    from Amazon S3 location and spark submitting
     the script in AWS Lambda
     """
 
     logger.info("******************Start AWS Lambda Handler************")
     s3_bucket_script = os.environ['SCRIPT_BUCKET']
-    input_script = os.environ['SPARK_SCRIPT']
+    input_script = event.get('SCRIPT_NAME', False) or os.environ['SPARK_SCRIPT']
     os.environ['INPUT_PATH'] = event.get('INPUT_PATH','')
     os.environ['OUTPUT_PATH'] = event.get('OUTPUT_PATH', '')
 
     s3_script_download(s3_bucket_script,input_script)
-    
+
     # Set the environment variables for the Spark application
     spark_submit(s3_bucket_script,input_script, event)
-   
