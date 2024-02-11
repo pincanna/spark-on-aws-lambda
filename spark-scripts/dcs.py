@@ -44,7 +44,7 @@ def format_duration(duration):
 
 duration_udf = F.udf(format_duration, T.StringType())
 
-store_calls = spark.read.json("s3://pincanna-twilio/events_stream/endpoint=store_call_ended/")
+store_calls = spark.read.json("s3a://pincanna-twilio/events_stream/endpoint=store_call_ended/")
 
 # store_calls = store_calls.withColumn("duration", duration_udf(F.col("event.form_data.CallDuration")))
 
